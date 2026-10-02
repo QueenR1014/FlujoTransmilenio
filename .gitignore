@@ -1,0 +1,10 @@
+# Datos crudos: no se suben (el GTFS pesa más de 100 MB). Ver README para descargarlos.
+data/raw/*
+!data/raw/.gitkeep
+
+# Jupyter y Python
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
