@@ -1,8 +1,14 @@
-# Informe técnico
+<h1 align="center">Informe Técnico</h1>
+
+<div align="center">
+    <p>
+    <p><strong>Autores:</strong> Gabriela Aldana, Santiago Jorigua, Juan Reina
+    </p>
+</div>
 
 ## 1. Descripción del dataset y del problema
 
-En la página web `[Datos abierto](https://datosabiertos-transmilenio.hub.arcgis.com/)`  encontramos los Datos Abiertos de TRANSMILENIO S. A. . En este portal de acceso podemos encontrar distintos datos sobre el sistema masivo de tránsito de la ciudad, desde sus servicios troncales (BRT "Transmilenio") y  zonales (comúnmente llamado buses SITP). En este proyecto queremos predecir las validaciones (entradas) al sistema troncal de Transmilenio para tres estaciones:
+En la página web `[Datos abierto](https://datosabiertos-transmilenio.hub.arcgis.com/)`  encontramos los Datos Abiertos de TRANSMILENIO S. A. . En este portal de acceso podemos encontrar distintos datos sobre el sistema masivo de tránsito de la ciudad, desde sus servicios troncales (BRT "Transmilenio") y  zonales (comúnmente llamado buses SITP). En este proyecto queremos predecir las **validaciones** (entradas) al sistema troncal de Transmilenio para tres estaciones:
 - Álcala (Troncal B Norte)
 - Modelia (Troncal K Calle 26)
 - Terreros (Troncal G NQS Sur)
@@ -12,8 +18,8 @@ mensuales para el año 2026 de todo el sistema troncal. Para efectos de este eje
 
 | Variable | Descripción | Tipo|
 | --- | --- | --- |
-|Código | Identificador único para cada estación. | Numérica Discreta|
-|Línea | Troncal a la que pertenece la estación. | Texto |
+|codigo | Identificador único para cada estación. | Numérica Discreta|
+|linea | Troncal a la que pertenece la estación. | Texto |
 | franja_min |  Ventana de tiempo de 15 minutos en las que se presentaron las validaciones. | Numérica Discreta|
 | validaciones |Cantidad de validaciones (entradas) realizadas a la estación | Numérica Discreta |
 |acceso  | Acceso de la estación. (Acceso o talanquera por la que se contaron las validaciones) |  Categórica |
