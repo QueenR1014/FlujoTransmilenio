@@ -47,6 +47,17 @@ Después de realizar esta transformación, la columna Fecha se convierte al tipo
 Finalmente, se agrupan los registros por Línea, Estación, Intervalo y Fecha, sumando las validaciones. Esta agregación es importante porque puede existir más de un registro para una misma combinación de estas variables, por ejemplo, cuando una estación cuenta con diferentes accesos o registros que deben representar conjuntamente el total de validaciones de la estación en un intervalo determinado.
 
 El resultado es un conjunto de datos en formato largo en el que cada fila representa una observación correspondiente a una estación, un intervalo de tiempo y una fecha específica. Esta estructura facilita tanto la exploración de los datos como la posterior construcción de modelos estadísticos.
+
+**Decisiones de limpieza**
+
+| Decisión | Justificación |
+|---|---|
+| Se excluyen las filas con Fase "Dual" | Quedan 123 estaciones. Deja por fuera estaciones como Alcalá y los portales; es una limitación del alcance |
+| Se suman los accesos de una misma estación | La unidad de análisis es la estación, no la puerta |
+| Los festivos entre semana (7 y 17 de agosto) se agrupan con los domingos | Su demanda se parece más a la de un domingo que a la de un día hábil |
+| No se eliminan ceros ni estaciones con pocos registros | Son observaciones reales |
+| La fecha no entra como variable | Con un solo mes no hay tendencia que aprender; su información útil está en `tipo_dia` |
+
 ### 2.2 Exploración y Análisis Descriptivo
 #### Calidad de los datos
 Antes de utilizar los datos para la construcción de los modelos, se realizó una revisión de su calidad con el objetivo de identificar valores faltantes, registros duplicados, inconsistencias y posibles anomalías que pudieran afectar el análisis.
@@ -103,7 +114,30 @@ Podemos ver cómo para cada tipo de día durante el més la cantidad de validaci
 </div>
 En los días hábiles se notan claramente a lo largo del sistema dos picos de tráfico durante el día. En días de menos tránsito como fines de semana y festivo se ve una cantidad casi constante de validaciones.
 
+#### Las tres estaciones de estudio
 
+<div align="center">
+    <img src="./figuras/eda_estaciones_estudio.png" alt="EDA estaciones estudio">
+</div>
+Para este estudio nos enfocaremos en tres estaciones de las tres troncales que queremos predecir. Podemos ver cómo las validaciones cambian para cada una de las estaciones. Terreros solo tiene un gran pico por la mañana, Mazurén tiene dos picos pero el primero es mayor. Mientras que Modelia presenta el efecto contrario de Mazurén al tener un pico mayor por la tarde.
+
+#### Correlaciones entre variables
+<div align="center">
+    <img src="./figuras/eda_variacion_explicada.png" alt="EDA variacion">
+</div>
+Para este estudio vamos a agregar las variables de estación, franja y tipo de día (si es hábil o día de descanso) entre ellas. Podemos ver cómo la suma de estas explican en su mayoría el movimiento de la variable objetivo.
+
+<div align="center">
+    <img src="./figuras/eda_corr.png" alt="EDA variacion">
+</div>
+Las variables que claramente más se relaciones son la tipología del día con si es entre o fin de semana.
+
+#### Valores Atípicos
+
+<div align="center">
+    <img src="./figuras/eda_atipicos.png" alt="EDA atipicos">
+</div>
+Aunque el porcentaje no es muy grande, podemos ver cómo los días que más datos atípicos tiene son los sábados. Posiblemente explicado por actividades que la gente tiene durante esos días.
 
 ### 2.3 Separación Entrenamiento/Prueba
 Para evaluar el desempeño de los modelos, los datos se dividen temporalmente en dos conjuntos. En lugar de realizar una división aleatoria, se utiliza la fecha como criterio de separación. Los registros correspondientes a los días 1 al 25 de agosto se utilizan como conjunto de entrenamiento, mientras que los registros de los días 26 al 31 de agosto se reservan para el conjunto de prueba.
@@ -112,9 +146,52 @@ Para evaluar el desempeño de los modelos, los datos se dividen temporalmente en
 </div>
 Esta estrategia permite simular una situación más cercana a la aplicación real del modelo: se entrena utilizando información disponible hasta una determinada fecha y posteriormente se evalúa su capacidad para predecir observaciones de días posteriores. De esta manera, se evita utilizar información del futuro durante el entrenamiento, lo que podría producir una estimación demasiado optimista del desempeño del modelo.
 
-## 3. Matriz de aplicabilidad
+## 3. Métodos aplicados: planteamiento, hiperparámetros (rango probado, valor elegido, por qué) y evaluación
+### 3.1 Preparación de variables
+- **Variable a predecir:** validaciones en la franja de 15 minutos.
+- **Categóricas** (`linea`, `estación`, `tipo_dia`): codificación one-hot.
+- **Cruces** (`est_franja`, `dia_franja`, `est_dia`): permiten que cada estación tenga su propia curva
+  por hora y que esa curva cambie según el tipo de día (hallazgo de la sección 2.6).
+- **Hora:** el intervalo como número (05:15 → 5,25), estandarizado. Las columnas one-hot ya están
+  todas en la misma escala (0 o 1), así que no se reescalan.
+- **Fecha:** no entra directamente.
 
-## 4. Métodos aplicados: planteamiento, hiperparámetros (rango probado, valor elegido, por qué) y evaluación
+La preparación va dentro de un *pipeline*: en cada pliegue se ajusta solo con los datos de
+entrenamiento de ese pliegue, sin fuga de información. La validación cruzada es de 5 pliegues.
+
+### 3.2 Entrenamiento sin cruces vs variable con cruces
+Al hacer el entrenamiento sin las variables de Cruces anteriormente mencionada, obtenemos los siguientes resultados:
+| Modelo                | RMSE    | R²    |
+|-----------------------|--------:|------:|
+| OLS sin cruces        | 176.360 | 0.335 |
+| Splines sin cruces    | 169.001 | 0.389 |
+| OLS con cruces        |  86.867 | 0.839 |
+| Splines con cruces    |  86.867 | 0.839 |
+
+Los modelos pifian las predicciones por un margen extremo al no usar las variables cruzadas. Los modelos asumen que las mismas variables como $Hora_{Modelia} = Hora_{Mazurén}$ son iguales. Pero para cada estación las mismas variables no son iguales, al hacer las variables dummmy de todas las combinaciones posibles el modelo genera una curva para cada una de ellas.
+<div align="center">
+    <img src="./images/train_no_dummy.png" alt="EDA atipicos">
+</div>
+
+De esta forma aplicamos la preparación adecuada de combinaciones entre variables y obtenemos los siguientes resultados:
+| Modelo        | MAE     | RMSE    | RMSE (desv. entre pliegues) | R²     |
+|---------------|--------:|--------:|----------------------------:|-------:|
+| Ridge         | 41.806  | 86.853  | 1.029                       | 0.839  |
+| OLS           | 41.331  | 86.867  | 1.096                       | 0.839  |
+| Splines       | 41.331  | 86.867  | 1.096                       | 0.839  |
+| Lasso         | 85.101  | 181.106 | 2.393                       | 0.298  |
+| Kernel (RBF)  | 94.517  | 200.972 | 3.142                       | 0.136  |
+| Base (media)  | 104.648 | 216.219 | 2.379                       | -0.000 |
+
+## 4. Matriz de aplicabilidad
+| Método | ¿Aporta? | RMSE en CV | Justificación |
+|---|---|---|---|
+| Base (media) | Referencia | 216,2 ± 2,4 | Piso de comparación |
+| OLS | Sí | 86,87 ± 1,10 | Modelo de referencia. Con los cruces de estación, franja y tipo de día baja el error un 60 % frente a la base (R² 0,84) |
+| Ridge | Sí, por estabilidad | 86,84 ± 1,03 (alpha = 0,1) | En error empata con OLS (0,03 de diferencia frente a 1,0 de variación entre pliegues). Aporta porque las columnas son redundantes (la troncal la determina la estación y los cruces contienen a los efectos sueltos): OLS no tiene solución única y Ridge sí |
+| Lasso | No | 181,1 ± 2,4 (alpha = 1) | Lasso sirve para descartar variables irrelevantes, y aquí no las hay: cada cruce estación-franja lleva información. Al penalizar, apaga esos cruces y vuelve al modelo sin interacciones |
+| Splines | No | 86,87 ± 1,10 | Da exactamente lo mismo que OLS con cualquier número de nudos (de 5 a 80). Con un coeficiente por estación y franja, la curva horaria ya está descrita por completo. Sin los cruces sí aportaba (celda 3.3b) |
+| Kernel (RBF) | No | 201,0 ± 3,1 | El kernel exacto no cabe en memoria (237.100 × 237.100). La aproximación de Nyström resume los datos con unos cientos de puntos de referencia y no alcanza a cubrir las cerca de 9.500 combinaciones de estación y franja |
 
 
 ## 5. Comparación de los finalistas
