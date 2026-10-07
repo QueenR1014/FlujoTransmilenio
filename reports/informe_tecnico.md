@@ -88,6 +88,22 @@ Para cada franja horaria vemos que durante el horario de operación casi ningún
 <div align="center">
     <img src="./figuras/EDA_distribucion.png" alt="EDA distribución">
 </div>
+Nuestra variable objetivo se distribuye con una gran asimetría. Al usar una escala logarítmica podemos ver cómo se distribuyen de una manera más balanceada en la cantidad de registros.
+
+#### Demanda día a día
+<div align="center">
+    <img src="./figuras/eda_serie_diaria.png" alt="EDA serie diaria">
+</div>
+Podemos ver cómo para cada tipo de día durante el més la cantidad de validaciones al sistema cambia. Los días hábiles, como es de esperar, tienen la mayor cantidad de entradas al sistema.
+
+#### Perfil a lo largo del día
+
+<div align="center">
+    <img src="./figuras/eda_perfil_horario.png" alt="EDA perfil horario">
+</div>
+En los días hábiles se notan claramente a lo largo del sistema dos picos de tráfico durante el día. En días de menos tránsito como fines de semana y festivo se ve una cantidad casi constante de validaciones.
+
+
 
 ### 2.3 Separación Entrenamiento/Prueba
 Para evaluar el desempeño de los modelos, los datos se dividen temporalmente en dos conjuntos. En lugar de realizar una división aleatoria, se utiliza la fecha como criterio de separación. Los registros correspondientes a los días 1 al 25 de agosto se utilizan como conjunto de entrenamiento, mientras que los registros de los días 26 al 31 de agosto se reservan para el conjunto de prueba.
