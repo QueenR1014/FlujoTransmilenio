@@ -49,11 +49,14 @@ Finalmente, se agrupan los registros por Línea, Estación, Intervalo y Fecha, s
 El resultado es un conjunto de datos en formato largo en el que cada fila representa una observación correspondiente a una estación, un intervalo de tiempo y una fecha específica. Esta estructura facilita tanto la exploración de los datos como la posterior construcción de modelos estadísticos.
 ### 2.2 Exploración y Análisis Descriptivo
 
+### 2.3 Separación Entrenamiento/Prueba
 
 
 ## 3. Matriz de aplicabilidad
 
 ## 4. Métodos aplicados: planteamiento, hiperparámetros (rango probado, valor elegido, por qué) y evaluación
+
+
 ## 5. Comparación de los finalistas
 ## 6. Decisión final
 ## 7. Limitaciones y posibles mejoras
