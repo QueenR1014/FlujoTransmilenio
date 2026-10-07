@@ -1,0 +1,4 @@
+,MAE_2.5%,MAE_mediana,MAE_97.5%
+Kernel (Nadaraya-Watson),21.13,26.02,30.86
+Splines,21.07,26.49,31.62
+Lasso,21.89,27.97,34.03

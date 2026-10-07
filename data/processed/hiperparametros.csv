@@ -1,0 +1,6 @@
+modelo,hiperparametro,rango_probado,elegido,en_el_borde
+Ridge,alpha,0.1 a 1e+05 (7 valores),1000.0,False
+Lasso,alpha,0.0001 a 0.1 (7 valores),0.00031622776601683794,False
+Splines,n_knots,4 a 48 (7 valores),48.0,True
+Kernel (Nadaraya-Watson),h,0.05 a 1 (7 valores),0.1,False
+Kernel (Nadaraya-Watson),d,0 a 4 (5 valores),0.0,False
