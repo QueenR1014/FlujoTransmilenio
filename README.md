@@ -25,8 +25,6 @@ taller-transmilenio/
 1. Validaciones: https://storage.googleapis.com/validaciones_tmsa/validaciones_mensuales.html
    En "Validación Troncal", año 2026, descargar junio, julio y agosto.
    Guardar los tres `.xlsx` en `data/raw/` sin abrirlos ni modificarlos en Excel.
-2. Opcional, oferta programada: descargar un GTFS del periodo desde
-   https://storage.googleapis.com/gtfs-estaticos/ y guardarlo como `data/raw/gtfs.zip`.
 
 Anotar aquí la fecha de descarga de cada archivo: _completar_.
 
@@ -34,7 +32,7 @@ Anotar aquí la fecha de descarga de cada archivo: _completar_.
 
 ```
 pip install -r requirements.txt
-jupyter notebook notebooks/taller_transmilenio.ipynb
+jupyter notebook notebooks/v2.ipynb
 ```
 
 Ejecutar todas las celdas en orden. La primera vez lee los Excel (cerca de un minuto por archivo)
