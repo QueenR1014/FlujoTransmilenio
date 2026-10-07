@@ -173,7 +173,8 @@ Los modelos pifian las predicciones por un margen extremo al no usar las variabl
     <img src="./images/train_no_dummy.png" alt="EDA atipicos">
 </div>
 
-De esta forma aplicamos la preparación adecuada de combinaciones entre variables y obtenemos los siguientes resultados:
+De esta forma aplicamos la preparación adecuada de combinaciones entre variables junto con optimización de hiperparámetros mediante búsqueda en grilla. A partir del anterior bloque obtenemos el siguiente resultado: 
+
 | Modelo        | MAE     | RMSE    | RMSE (desv. entre pliegues) | R²     |
 |---------------|--------:|--------:|----------------------------:|-------:|
 | Ridge         | 41.806  | 86.853  | 1.029                       | 0.839  |
@@ -195,5 +196,43 @@ De esta forma aplicamos la preparación adecuada de combinaciones entre variable
 
 
 ## 5. Comparación de los finalistas
+### 5.1 Métricas base
+Para esta parte, utilizamos por primera vez el conjunto de datos de prueba.
+<div align="center">
+    <img src="./images/finalists_comparison.png" alt="EDA atipicos">
+</div>
+De este bloque obtenemos los siguientes resultados:
+
+| Modelo        | MAE test   | RMSE test   | R² test    | Mejora en MAE frente a la base |
+|---------------|--------:|--------:|-------:|--------------------------------:|
+| Base (media)  | 105.140 | 220.670 | -0.001 | 0%                              |
+| Ridge         |  38.801 |  80.397 |  0.867 | 63%                             |
+| OLS           |  38.729 |  80.347 |  0.867 | 63%                             |
+| Splines       |  38.729 |  80.347 |  0.867 | 63%                             | 
+
+Los finalistas tienen un performance casi perfectamente igual. Indicando que la estructura natural de los datos cruzados conservan la curvatura intrínseca de ellos. Por eso todos tienden a predecir la misma curva con los mismos errores.
+
+### 5.2 Comparación con Bootstrap
+
+Se remuestrean 1.000 veces los días de los datos de prueba (días completos, porque las franjas de un mismo día se parecen entre sí) y se recalcula el error de cada modelo. Si el intervalo del 95 % de la diferencia frente al mejor no incluye el 0, la ventaja es real.
+<div align="center">
+    <img src="./images/bootstrap_comparison.png" alt="EDA atipicos">
+</div>
+
+| Modelo  | MAE en prueba, IC 95 % | RMSE en prueba, IC 95 % |
+|---------|------------------------:|-------------------------:|
+| Ridge   | 38.75 [34.23, 46.81]   | 79.80 [67.06, 98.26]    |
+| OLS     | 38.67 [34.12, 46.83]   | 79.74 [67.03, 98.43]    |
+| Splines | 38.67 [34.12, 46.83]   | 79.74 [67.03, 98.43]    |
+
+Para todos nuestros finalistas, los intervalos de confianza se ven bastante similares, reforzando la explicación de que todos tienden a la misma curva y no tener una ventaja real entre modelos.
+
+### 5.3 Comportamiento en estaciones seleccionadas
+
+El mejor modelo frente a los datos reales en dos lunes hábiles: arriba uno de entrenamiento (24 de agosto) y abajo el de prueba (31 de agosto), que el modelo nunca vio. Los puntos son los datos reales y la línea es la predicción. La tabla compara el error de cada estación en entrenamiento y en prueba. La celda siguiente repite el ejercicio con dos sábados (22 y 29 de agosto).
+
+<div align="center">
+    <img src="./figuras/test_vs_train.png" alt="EDA atipicos">
+</div>
 ## 6. Decisión final
 ## 7. Limitaciones y posibles mejoras
