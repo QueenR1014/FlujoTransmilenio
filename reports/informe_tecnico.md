@@ -77,6 +77,17 @@ La siguiente tabla presenta los principales estadísticos descriptivos de la var
 
 La diferencia considerable entre la media y la desviación estándar evidencia una alta dispersión en el número de validaciones. Esto se puede observar también al comparar los percentiles: el 50 % de las observaciones presenta 46 validaciones o menos, mientras que el 75 % presenta como máximo 108 validaciones. En contraste, el 10 % superior de las observaciones supera aproximadamente las 240 validaciones.
 
+---
+Para el efecto práctico de nuestro modelo, deseamos que no todos los registros de validaciones sean nulos (franjas de tiempo donde ninguna persona entra al sistema de transporte). La siguiente gráfica muestra el porcentaje de registros nulos dada una hora del día.
+<div align="center">
+    <img src="./figuras/EDA_ceros.png" alt="EDA ceros">
+</div>
+Para cada franja horaria vemos que durante el horario de operación casi ningún registro es nulo.
+
+#### Distribución de la variable objetivo
+<div align="center">
+    <img src="./figuras/EDA_distribucion.png" alt="EDA distribución">
+</div>
 
 ### 2.3 Separación Entrenamiento/Prueba
 Para evaluar el desempeño de los modelos, los datos se dividen temporalmente en dos conjuntos. En lugar de realizar una división aleatoria, se utiliza la fecha como criterio de separación. Los registros correspondientes a los días 1 al 25 de agosto se utilizan como conjunto de entrenamiento, mientras que los registros de los días 26 al 31 de agosto se reservan para el conjunto de prueba.
