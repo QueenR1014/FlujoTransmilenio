@@ -41,16 +41,49 @@ Este formato resulta poco conveniente para realizar análisis estadísticos y co
 
 Después de realizar esta transformación, la columna Fecha se convierte al tipo datetime, lo que permite trabajar correctamente con las fechas y facilita posteriormente la extracción de información como el día, mes o día de la semana.
 <div align="center">
-    <img src="./images/data_load.png" alt="Datos en Bruto">
+    <img src="./images/data_load.png" alt="Carga de datos">
 </div>
 
 Finalmente, se agrupan los registros por Línea, Estación, Intervalo y Fecha, sumando las validaciones. Esta agregación es importante porque puede existir más de un registro para una misma combinación de estas variables, por ejemplo, cuando una estación cuenta con diferentes accesos o registros que deben representar conjuntamente el total de validaciones de la estación en un intervalo determinado.
 
 El resultado es un conjunto de datos en formato largo en el que cada fila representa una observación correspondiente a una estación, un intervalo de tiempo y una fecha específica. Esta estructura facilita tanto la exploración de los datos como la posterior construcción de modelos estadísticos.
 ### 2.2 Exploración y Análisis Descriptivo
+#### Calidad de los datos
+Antes de utilizar los datos para la construcción de los modelos, se realizó una revisión de su calidad con el objetivo de identificar valores faltantes, registros duplicados, inconsistencias y posibles anomalías que pudieran afectar el análisis.
+
+```text
+Registros: 294,004
+Estaciones: 123
+Troncales: 14
+Días: 31 (del 2026-08-01 al 2026-08-31)
+Validaciones en total: 31,016,651
+
+Nulos por columna: {'linea': 0, 'estación': 0, 'intervalo': 0, 'fecha': 0,
+    'validaciones': 0, 'tipo_dia': 0, 'hora': 0, 'dia_semana': 0}
+
+Registros repetidos (misma estación, fecha y franja): 0
+Validaciones negativas: 0
+
+Franjas por estación y día: mínimo 1, mediana 79, máximo 87
+Registros por estación: mínimo 31, máximo 2,697
+Estaciones que aparecen en más de una troncal: 0
+
+Registros con validaciones en cero: 7.8% del total | entre 5:00 y 21:00: 2.3%
+```
+La siguiente tabla presenta los principales estadísticos descriptivos de la variable validaciones. Se cuenta con 294.004 observaciones, cuyo promedio es de 105,5 validaciones por registro y cuya desviación estándar es de 217,1.
+| Variable       | Count    | Mean  | Std   | Min | 25%  | 50% | 75%  | 90%  | 99%   | Max  |
+|----------------|---------:|------:|------:|----:|-----:|----:|-----:|-----:|------:|-----:|
+| Validaciones   | 294,004  | 105.5 | 217.1 | 0.0 | 14.0 | 46.0 | 108.0 | 240.0 | 1,022.0 | 4,687.0 |
+
+La diferencia considerable entre la media y la desviación estándar evidencia una alta dispersión en el número de validaciones. Esto se puede observar también al comparar los percentiles: el 50 % de las observaciones presenta 46 validaciones o menos, mientras que el 75 % presenta como máximo 108 validaciones. En contraste, el 10 % superior de las observaciones supera aproximadamente las 240 validaciones.
+
 
 ### 2.3 Separación Entrenamiento/Prueba
-
+Para evaluar el desempeño de los modelos, los datos se dividen temporalmente en dos conjuntos. En lugar de realizar una división aleatoria, se utiliza la fecha como criterio de separación. Los registros correspondientes a los días 1 al 25 de agosto se utilizan como conjunto de entrenamiento, mientras que los registros de los días 26 al 31 de agosto se reservan para el conjunto de prueba.
+<div align="center">
+    <img src="./images/train_split.png" alt="División de Entrenamiento">
+</div>
+Esta estrategia permite simular una situación más cercana a la aplicación real del modelo: se entrena utilizando información disponible hasta una determinada fecha y posteriormente se evalúa su capacidad para predecir observaciones de días posteriores. De esta manera, se evita utilizar información del futuro durante el entrenamiento, lo que podría producir una estimación demasiado optimista del desempeño del modelo.
 
 ## 3. Matriz de aplicabilidad
 
