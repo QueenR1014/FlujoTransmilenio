@@ -1,0 +1,6 @@
+,Todas las estaciones,Todas las estaciones,Todas las estaciones,Estaciones de estudio,Estaciones de estudio,Estaciones de estudio
+,MAE,RMSE,R2,MAE,RMSE,R2
+Kernel (Nadaraya-Watson),21.03,45.24,0.97,26.04,49.31,0.97
+Splines,21.53,47.14,0.97,26.7,50.94,0.97
+Lasso,22.42,51.49,0.96,27.93,57.38,0.96
+Base (media),128.37,284.43,-0.16,165.01,319.83,-0.27
