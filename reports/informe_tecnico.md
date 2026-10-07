@@ -14,8 +14,7 @@ En la página web `[Datos abierto](https://datosabiertos-transmilenio.hub.arcgis
 - Troncal G NQS Sur
 *Estas troncales fueron elegidas de manera arbitraria.*
 
-La fuente de Datos Abiertos TRANSMILENIO S.A. nos provee de las validaciones
-mensuales para el año 2026 de todo el sistema troncal. Para efectos de este ejercicio solo usaremos los datos para el mes de agosto del año mencionado. En el archivo encontramos el DataSet para el respectivo mes con las siguientes variables:
+La fuente de Datos Abiertos TRANSMILENIO S.A. nos provee de las validaciones mensuales para el año 2026 de todo el sistema troncal. Para efectos de este ejercicio solo usaremos los datos para el mes de agosto del año mencionado. En el archivo encontramos el DataSet para el respectivo mes con las siguientes variables:
 
 | Variable | Descripción | Tipo|
 | --- | --- | --- |
@@ -32,7 +31,28 @@ mensuales para el año 2026 de todo el sistema troncal. Para efectos de este eje
 </div>
 
 ## 2. Exploración y decisiones de limpieza
+
+### 2.1 Carga y Limpieza de datos
+En primera instancia, para simplificar el problema no tendremos en cuenta a los servicios de Fase Dual, estas estaciones contienen servicios de rutas que no solo paran en estaciones del servicio troncal sino también del zonal.
+
+Como se puede apreciar en la sección anterior, los datos están en una matriz a lo ancho, donde las últimas columnas corresponden a los distintos días del mes de agosto. En este formato, cada fila representa una combinación de línea, estación e intervalo de tiempo, mientras que cada columna adicional contiene el número de validaciones registradas para un día específico.
+
+Este formato resulta poco conveniente para realizar análisis estadísticos y construir modelos, ya que la fecha se encuentra representada como una variable implícita en el nombre de las columnas. Por esta razón, se realiza una transformación de los datos de formato ancho (wide) a formato largo (long) mediante la función melt() de pandas.
+
+Después de realizar esta transformación, la columna Fecha se convierte al tipo datetime, lo que permite trabajar correctamente con las fechas y facilita posteriormente la extracción de información como el día, mes o día de la semana.
+<div align="center">
+    <img src="./images/data_load.png" alt="Datos en Bruto">
+</div>
+
+Finalmente, se agrupan los registros por Línea, Estación, Intervalo y Fecha, sumando las validaciones. Esta agregación es importante porque puede existir más de un registro para una misma combinación de estas variables, por ejemplo, cuando una estación cuenta con diferentes accesos o registros que deben representar conjuntamente el total de validaciones de la estación en un intervalo determinado.
+
+El resultado es un conjunto de datos en formato largo en el que cada fila representa una observación correspondiente a una estación, un intervalo de tiempo y una fecha específica. Esta estructura facilita tanto la exploración de los datos como la posterior construcción de modelos estadísticos.
+### 2.2 Exploración y Análisis Descriptivo
+
+
+
 ## 3. Matriz de aplicabilidad
+
 ## 4. Métodos aplicados: planteamiento, hiperparámetros (rango probado, valor elegido, por qué) y evaluación
 ## 5. Comparación de los finalistas
 ## 6. Decisión final
