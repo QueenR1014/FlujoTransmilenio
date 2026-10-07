@@ -225,7 +225,7 @@ Se remuestrean 1.000 veces los días de los datos de prueba (días completos, po
 | OLS     | 38.67 [34.12, 46.83]   | 79.74 [67.03, 98.43]    |
 | Splines | 38.67 [34.12, 46.83]   | 79.74 [67.03, 98.43]    |
 
-Para todos nuestros finalistas, los intervalos de confianza se ven bastante similares, reforzando la explicación de que todos tienden a la misma curva y no tener una ventaja real entre modelos.
+Para todos nuestros finalistas, los intervalos de confianza se ven bastante similares, reforzando la explicación de que todos tienden a la misma curva y no tener una ventaja real entre modelos. Aunque Ridge sea bastante similar a los otros dos modelos, será elegido como mejor modelo porque minimiza marginalmente el error.
 
 ### 5.3 Comportamiento en estaciones seleccionadas
 
@@ -234,5 +234,31 @@ El mejor modelo frente a los datos reales en dos lunes hábiles: arriba uno de e
 <div align="center">
     <img src="./figuras/test_vs_train.png" alt="EDA atipicos">
 </div>
+
+Podemos ver cómo el modelo "ignora" la fecha en la que ocurren estas validaciones, pero mantiene la estructura entre los días de la semana. En este caso que son un lunes de entrenamiento y el otro de test las curvas son particularmente similares y logra interpretar de manera exitosa los puntos de test.
+
+Pero este resultado puede ser una particularidad de elegir un día entre semana, a continuación se hace el mismo test pero para un día sábado en test y en train.
+
+<div align="center">
+    <img src="./figuras/test_vs_train2.png" alt="EDA atipicos">
+</div>
+
+Podemos ver cómo no para todas las estaciones seleccionadas la curva se comporta de buena manera, podemos ver en cómo existe un sesgo en el modelo de intentar replicar los comportamientos de días entre semana al ser mayoría en el conjunto de entrenamiento.
+
 ## 6. Decisión final
+
+- **Modelo escogido:** Ridge con alpha = 0,1, sobre las variables estación, troncal, tipo de día y sus cruces con la franja horaria.
+- **Error en prueba:** MAE de 38,8 validaciones por franja de 15 minutos (IC 95 %: 34,2 a 46,8), RMSE de 80,4 y R² de 0,87. Es un 63 % menos que la línea base (MAE 105,1).
+- **Frente a los otros finalistas:** empate. La diferencia de MAE con OLS es de −0,08 [−0,22; 0,11] y con Splines la misma, porque Splines y OLS dan predicciones idénticas. Los intervalos incluyen el cero.
+- **Por qué Ridge y no OLS:** como el error es el mismo, se decide por contexto. Las columnas son redundantes, así que OLS no tiene coeficientes únicos; Ridge sí, con el mismo costo de cómputo y un solo hiperparámetro que no quedó en el borde.
+- **Por estación (MAE en prueba):** Mazurén 31,2 (25 % de su demanda promedio), Modelia 16,9 (24 %) y Terreros 106,8 (36 %). Donde más falla es en Terreros, la más grande y la más concentrada en la mañana.
+- **No hay sobreajuste:** el error en prueba (RMSE 80,4) no supera al de validación cruzada (86,8), y por estación el error en entrenamiento y en prueba es casi igual (Mazurén 31,4 y 31,2).
+- **Qué es el modelo en la práctica:** el perfil promedio de cada estación en cada franja, corregido por el tipo de día. Sirve para planear un día normal, no para anticipar un día atípico.
+
 ## 7. Limitaciones y posibles mejoras
+
+- Un solo mes de datos y solo seis días de prueba (un sábado y un domingo): los intervalos son anchos.
+- Los dos festivos entre semana están en entrenamiento; el modelo no se probó en un festivo.
+- No usa la oferta de buses ni eventos (marchas, cierres, lluvia).
+- Se excluyeron las filas con Fase "Dual", así que no cubre estaciones como Alcalá ni los portales.
+- El error absoluto crece con el tamaño de la estación; modelar el logaritmo de las validaciones es una mejora posible.
