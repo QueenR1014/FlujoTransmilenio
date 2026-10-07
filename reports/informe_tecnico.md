@@ -12,20 +12,27 @@ En la página web `[Datos abierto](https://datosabiertos-transmilenio.hub.arcgis
 - Troncal B Norte
 - Troncal K Calle 26
 - Troncal G NQS Sur
+*Estas troncales fueron elegidas de manera arbitraria.*
 
 La fuente de Datos Abiertos TRANSMILENIO S.A. nos provee de las validaciones
-mensuales para el año 2026 de todo el sistema troncal. Para efectos de este ejercicio solo usaremos los datos para los meses de junio, julio y agosto del año mencionado. En cada archivo encontramos el DataSet para el respectivo mes con las siguientes variables:
+mensuales para el año 2026 de todo el sistema troncal. Para efectos de este ejercicio solo usaremos los datos para el mes de agosto del año mencionado. En el archivo encontramos el DataSet para el respectivo mes con las siguientes variables:
 
 | Variable | Descripción | Tipo|
 | --- | --- | --- |
-|codigo | Identificador único para cada estación. | Numérica Discreta|
-|linea | Troncal a la que pertenece la estación. | Texto |
-| franja_min |  Ventana de tiempo de 15 minutos en las que se presentaron las validaciones. | Numérica Discreta|
-| validaciones |Cantidad de validaciones (entradas) realizadas a la estación | Numérica Discreta |
-|acceso  | Acceso de la estación. (Acceso o talanquera por la que se contaron las validaciones) |  Categórica |
-| nombre | Nombre de la estación | Texto |
+|Fase | Fase a la que pertenece el servicio. (Antigüedad de la troncal) | Categórica|
+|Línea | Troncal a la que pertenece la estación. | Texto |
+| Estación |  Código y Nombre de la estación | Texto |
+| Acceso de Estación |Acceso o talanqueras por la que se contaron las validaciones de la estación. | Numérica Discreta |
+|Intervalo  | Intervalo de 15 minutos en los que se cuentan las cantidades de validaciones realizadas por cada acceso. |  Numérica Discreta |
+| Fechas | Las últimas 31 columnas representan cada uno de los días del mes. El valor que alojan en esta variable son las cantidades de validaciones que se realizaron en el día respectivo. | Numérica Discreta |
 
-Por otro lado, los mismos Datos Abiertos incluyen los archivos GTFS estáticos (por sus siglas en inglés *General Transit Feed Specification*). Estos archivos son el estándar en compartir información sobre sistemas de tránsito para que plataformas como Google Maps y demás puedan interpretarla. 
+<div align="center">
+    <p>
+    Datos en bruto
+    ![](./images/raw_data.png)
+    </p>
+</div>
+
 ## 2. Exploración y decisiones de limpieza
 ## 3. Matriz de aplicabilidad
 ## 4. Métodos aplicados: planteamiento, hiperparámetros (rango probado, valor elegido, por qué) y evaluación
