@@ -8,7 +8,7 @@
 
 ## 1. Descripción del dataset y del problema
 
-En la página web `[Datos abierto](https://datosabiertos-transmilenio.hub.arcgis.com/)`  encontramos los Datos Abiertos de TRANSMILENIO S. A. . En este portal de acceso podemos encontrar distintos datos sobre el sistema masivo de tránsito de la ciudad, desde sus servicios troncales (BRT "Transmilenio") y  zonales (comúnmente llamado buses SITP). En este proyecto queremos predecir las **validaciones** (entradas) al sistema  Transmilenio para tres troncales:
+En la página web `[Datos abierto](https://datosabiertos-transmilenio.hub.arcgis.com/)`  encontramos los Datos Abiertos de TRANSMILENIO S. A. . En este portal de acceso podemos encontrar distintos datos sobre el sistema masivo de transporte de la ciudad, desde sus servicios troncales (BRT "Transmilenio") y  zonales (comúnmente llamado buses SITP). En este proyecto queremos predecir las **validaciones** (entradas) al sistema  Transmilenio para tres troncales:
 - Troncal B Norte
 - Troncal K Calle 26
 - Troncal G NQS Sur
@@ -27,10 +27,8 @@ mensuales para el año 2026 de todo el sistema troncal. Para efectos de este eje
 | Fechas | Las últimas 31 columnas representan cada uno de los días del mes. El valor que alojan en esta variable son las cantidades de validaciones que se realizaron en el día respectivo. | Numérica Discreta |
 
 <div align="center">
-    <p>
-    Datos en bruto
-    ![](./images/raw_data.png)
-    </p>
+    <p>Datos en bruto</p>
+    <img src="./images/raw_data.png" alt="Datos en Bruto">
 </div>
 
 ## 2. Exploración y decisiones de limpieza
