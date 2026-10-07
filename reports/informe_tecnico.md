@@ -91,13 +91,13 @@ La diferencia considerable entre la media y la desviación estándar evidencia u
 ---
 Para el efecto práctico de nuestro modelo, deseamos que no todos los registros de validaciones sean nulos (franjas de tiempo donde ninguna persona entra al sistema de transporte). La siguiente gráfica muestra el porcentaje de registros nulos dada una hora del día.
 <div align="center">
-    <img src="./figuras/EDA_ceros.png" alt="EDA ceros">
+    <img src="./figuras/eda_ceros.png" alt="EDA ceros">
 </div>
 Para cada franja horaria vemos que durante el horario de operación casi ningún registro es nulo.
 
 #### Distribución de la variable objetivo
 <div align="center">
-    <img src="./figuras/EDA_distribucion.png" alt="EDA distribución">
+    <img src="./figuras/eda_distribucion.png" alt="EDA distribución">
 </div>
 Nuestra variable objetivo se distribuye con una gran asimetría. Al usar una escala logarítmica podemos ver cómo se distribuyen de una manera más balanceada en la cantidad de registros.
 
